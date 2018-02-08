@@ -186,4 +186,13 @@ def main(mode='minmax'):
 
 
 if __name__ == '__main__':
-    main(mode='negamax')
+    from optparse import OptionParser
+
+    parser = OptionParser()
+    parser.add_option('-m', '--mode', dest='mode', action='store', default='random', help='select algorithm')
+    opts, args = parser.parse_args()
+
+    if opts.mode in ('random', 'minmax', 'negamax'):
+        main(mode=opts.mode)
+    else:
+        print('unsupported mode')
