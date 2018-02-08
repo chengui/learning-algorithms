@@ -128,8 +128,30 @@ def minmax(board, player):
     return bestScore, bestMove
 
 
-def main():
-    random.seed(None)
+def negamax(board, player):
+    if board.isGameOver():
+        return board.evaluate(player), None
+
+    bestMove = None
+    bestScore = -float('inf')
+
+    for move in board.getMoves():
+        newBoard = board.copyBoard()
+        newBoard.makeMove(board.currentPlayer(), move)
+        score, _ = negamax(newBoard, player)
+        score = -score
+
+        if score > bestScore:
+            bestScore = score
+            bestMove = move
+
+    return bestScore, bestMove
+
+
+def main(mode='minmax'):
+    if mode == 'random':
+        random.seed(None)
+
     board = Board()
     while True:
         if board.isGameOver():
