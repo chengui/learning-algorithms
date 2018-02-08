@@ -159,6 +159,7 @@ def main(mode='minmax'):
             print('Winner: ', board.currentPlayer())
             break
         print(board)
+
         loc_str = raw_input('please take your turn: ')
         if not loc_str:
             print('quit..')
@@ -166,14 +167,23 @@ def main(mode='minmax'):
         (x, y) = map(int, loc_str.split())
         if not board.makeMove(0, (x, y)):
             continue
-        # moves = board.getMoves()
-        # if moves:
-            # move = moves[random.randint(0, len(moves)-1)]
-            # board.makeMove(1, move)
-        score, move = minmax(board, 1)
-        if move:
-            board.makeMove(1, move)
+
+        if mode == 'random':
+            moves = board.getMoves()
+            if moves:
+                move = moves[random.randint(0, len(moves)-1)]
+                board.makeMove(1, move)
+
+        if mode == 'minmax':
+            _, move = minmax(board, 1)
+            if move:
+                board.makeMove(1, move)
+
+        if mode == 'negamax':
+            _, move = minmax(board, 1)
+            if move:
+                board.makeMove(1, move)
 
 
 if __name__ == '__main__':
-    main()
+    main(mode='negamax')
