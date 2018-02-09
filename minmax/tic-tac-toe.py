@@ -131,7 +131,10 @@ def minmax(board, player):
 
 def negamax(board, player):
     if board.isGameOver():
-        return board.evaluate(player), None
+        if board.currentPlayer() == player:
+            return board.evaluate(player), None
+        else:
+            return -board.evaluate(player), None
 
     bestMove = None
     bestScore = -float('inf')
@@ -145,6 +148,32 @@ def negamax(board, player):
         if score > bestScore:
             bestScore = score
             bestMove = move
+
+    return bestScore, bestMove
+
+
+def abnegamax(board, player, alpha, beta):
+    if board.isGameOver():
+        return board.evaluate(player), None
+
+    bestMove = None
+    bestScore = -float('inf')
+
+    for move in board.getMoves():
+        newBoard = board.copyBoard()
+        newBoard.makeMove(board.currentPlayer(), move)
+        score, _ = abnegamax(newBoard, player, -beta, -alpha)
+        score = -score
+
+        if score > bestScore:
+            bestScore = score
+            bestMove = move
+
+        if bestScore > alpha:
+            alpha = bestScore
+
+        if bestScore >= beta:
+            break
 
     return bestScore, bestMove
 
@@ -237,6 +266,13 @@ def main(mode='minmax'):
                 board.makeMove(1, move)
             print('Elapsed: ', time.clock() - start)
 
+        if mode == 'abnegamax':
+            start = time.clock()
+            _, move = abnegamax(board, 1, -float('inf'), float('inf'))
+            if move:
+                board.makeMove(1, move)
+            print('Elapsed: ', time.clock() - start)
+
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -245,7 +281,7 @@ if __name__ == '__main__':
     parser.add_option('-m', '--mode', dest='mode', action='store', default='random', help='select algorithm')
     opts, args = parser.parse_args()
 
-    if opts.mode in ('random', 'minmax', 'negamax', 'alphabeta'):
+    if opts.mode in ('random', 'minmax', 'negamax', 'alphabeta', 'abnegamax'):
         main(mode=opts.mode)
     else:
         print('unsupported mode')
