@@ -103,6 +103,22 @@ class Board:
 
 
 def minmax(board, player):
+    """
+
+    ::pseudo code::
+    function minimax(node, depth)
+        if node is a terminal node or depth = 0
+            return the heuristic value of node
+        if the adversary is to play at node
+            let a := +inf
+            foreach child of node
+                a := min(a, minimax(child, depth - 1))
+        else {we are to play at node}
+            let a := -inf
+            foreach child of node
+                a := max(a, minimax(child, depth - 1))
+        return a
+    """
     if board.isGameOver():
         return board.evaluate(player), None
 
