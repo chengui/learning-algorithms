@@ -149,6 +149,45 @@ def negamax(board, player):
     return bestScore, bestMove
 
 
+def alphabeta(board, player, alpha, beta):
+    if board.isGameOver():
+        return board.evaluate(player), None
+
+    bestMove = None
+    curr_player = board.currentPlayer()
+    if curr_player == player:
+        bestScore = -float('inf')
+    else:
+        bestScore = float('inf')
+
+    for move in board.getMoves():
+        newBoard = board.copyBoard()
+        newBoard.makeMove(curr_player, move)
+        score, _ = alphabeta(newBoard, player, alpha, beta)
+        if curr_player == player:
+            if score > bestScore:
+                bestScore = score
+                bestMove = move
+
+            if score > alpha:
+                alpha = score
+
+            if alpha >= beta:
+                break
+        else:
+            if score < bestScore:
+                bestScore = score
+                bestMove = move
+
+            if score < beta:
+                beta = score
+
+            if alpha >= beta:
+                break
+
+    return bestScore, bestMove
+
+
 def main(mode='minmax'):
     if mode == 'random':
         random.seed(None)
@@ -185,9 +224,18 @@ def main(mode='minmax'):
             print('Elapsed: ', time.clock() - start)
 
         if mode == 'negamax':
-            _, move = minmax(board, 1)
+            start = time.clock()
+            _, move = negamax(board, 1)
             if move:
                 board.makeMove(1, move)
+            print('Elapsed: ', time.clock() - start)
+
+        if mode == 'alphabeta':
+            start = time.clock()
+            _, move = alphabeta(board, 1, -float('inf'), float('inf'))
+            if move:
+                board.makeMove(1, move)
+            print('Elapsed: ', time.clock() - start)
 
 
 if __name__ == '__main__':
@@ -197,7 +245,7 @@ if __name__ == '__main__':
     parser.add_option('-m', '--mode', dest='mode', action='store', default='random', help='select algorithm')
     opts, args = parser.parse_args()
 
-    if opts.mode in ('random', 'minmax', 'negamax'):
+    if opts.mode in ('random', 'minmax', 'negamax', 'alphabeta'):
         main(mode=opts.mode)
     else:
         print('unsupported mode')
