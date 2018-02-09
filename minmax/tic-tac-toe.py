@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import time
 import random
 import copy
 
@@ -169,15 +170,19 @@ def main(mode='minmax'):
             continue
 
         if mode == 'random':
+            start = time.clock()
             moves = board.getMoves()
             if moves:
                 move = moves[random.randint(0, len(moves)-1)]
                 board.makeMove(1, move)
+            print('Elapsed: ', time.clock() - start)
 
         if mode == 'minmax':
+            start = time.clock()
             _, move = minmax(board, 1)
             if move:
                 board.makeMove(1, move)
+            print('Elapsed: ', time.clock() - start)
 
         if mode == 'negamax':
             _, move = minmax(board, 1)
