@@ -148,9 +148,9 @@ def minmax(board, player):
 def negamax(board, player):
     if board.isGameOver():
         if board.currentPlayer() == player:
-            return board.evaluate(player), None
-        else:
             return -board.evaluate(player), None
+        else:
+            return board.evaluate(player), None
 
     bestMove = None
     bestScore = -float('inf')
@@ -170,7 +170,10 @@ def negamax(board, player):
 
 def abnegamax(board, player, alpha, beta):
     if board.isGameOver():
-        return board.evaluate(player), None
+        if board.currentPlayer() == player:
+            return -board.evaluate(player), None
+        else:
+            return board.evaluate(player), None
 
     bestMove = None
     bestScore = -float('inf')
