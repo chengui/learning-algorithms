@@ -361,16 +361,21 @@ def minmax(board, alpha, beta):
             if alpha >= beta:
                 break
 
+    # if not cache.get(hash(board), None):
+        # cache[hash(board)] = (bestScore, bestMove)
     return bestScore, bestMove
 
 
 def main():
     board = Board()
 
-    farmer_cards = raw_input('input lord (you) cards: ')
-    board.playerA = Card.convert(farmer_cards.split())
-    lord_cards = raw_input('input farmer cards: ')
-    board.playerB = Card.convert(lord_cards.split())
+    # farmer_cards = raw_input('input lord cards: ')
+    # board.playerA = Card.convert(farmer_cards.split())
+    # lord_cards = raw_input('input farmer cards: ')
+    # board.playerB = Card.convert(lord_cards.split())
+
+    board.playerA = Card.convert('Y A K K Q J 10 9 8 5 4'.split())
+    board.playerB = Card.convert('2 A K Q J 10 9 9 7 7 3'.split())
 
     first_hand = True
     while True:
