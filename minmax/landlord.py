@@ -101,6 +101,9 @@ class Move:
     def __str__(self):
         return str(Card.revert(self.cards))
 
+    def __repr__(self):
+        return 'Move(%s, %d, %d)' % (self.__str__(), self.pattern, self.value)
+
     def __cmp__(self, o):
         return cmp(sorted(self.cards), sorted(o.cards))
 
@@ -121,8 +124,8 @@ class Board:
 
     def __str__(self):
         s = ''
-        s += 'PlayerA(U): %s\n' % Card.revert(sorted(self.playerA, reverse=True))
-        s += 'PlayerB(I): %s\n' % Card.revert(sorted(self.playerB, reverse=True))
+        s += 'Lord: %s\n' % Card.revert(sorted(self.playerA, reverse=True))
+        s += 'Farmer: %s\n' % Card.revert(sorted(self.playerB, reverse=True))
         # s += 'Records: %s\n' % ', '.join(map(str, self.records))
         return s
 
