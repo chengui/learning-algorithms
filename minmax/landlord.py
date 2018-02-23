@@ -129,6 +129,10 @@ class Board:
         # s += 'Records: %s\n' % ', '.join(map(str, self.records))
         return s
 
+    def __hash__(self):
+        record = self.records and self.records[-1].cards or []
+        return hash(str((sorted(self.playerA), sorted(self.playerB), sorted(record))))
+
     def isGameOver(self):
         return len(self.playerA) == 0 or len(self.playerB) == 0
 
@@ -329,9 +333,14 @@ def evaluate(board):
         return -10
 
 
-def minmax(board, alpha, beta):
+def minmax(board, alpha, beta, cache = {}):
     if board.isGameOver():
+        if not cache.get(hash(board), None):
+            cache[hash(board)] = (evaluate(board), None)
         return evaluate(board), None
+
+    if cache.get(hash(board), None):
+        return cache[hash(board)]
 
     bestMove = None
     if board.currentPlayer() == 1:
@@ -364,8 +373,8 @@ def minmax(board, alpha, beta):
             if alpha >= beta:
                 break
 
-    # if not cache.get(hash(board), None):
-        # cache[hash(board)] = (bestScore, bestMove)
+    if not cache.get(hash(board), None):
+        cache[hash(board)] = (bestScore, bestMove)
     return bestScore, bestMove
 
 
