@@ -176,27 +176,31 @@ class Board:
         return getNextMoves(player, last_move.pattern, last_move.value)
 
 
-def getSequence(cards, length, size, num):
-    ans = []
+def getSequence(cards, length, value, num):
+    if len(cards) < length * num:
+        return []
+
+    card_count = {}
+    for card in cards:
+        card_count[card] = card_count.get(card, 0) + 1
+
+    res = []
     seq = []
-    if len(cards) >= length * num:
-        for card in list(set(cards)):
-            if ((len(seq) == 0 and card > size and card <= Card.ACE and cards.count(card) >= num) or
-                (len(seq) != 0 and seq[-1] + 1 == card and card <= Card.ACE and cards.count(card) >= num)):
-                seq = seq + [card] * num
-            else:
-                seq = []
-            if len(seq) == length * num:
-                pattern = -1
-                if num == 1:
-                    pattern = length + 2
-                elif num == 2:
-                    pattern = length + 12
-                elif num == 3:
-                    pattern = length + 21
-                ans.append(Move(copy.deepcopy(seq), pattern, seq[0]))
-                seq = seq[num:]
-    return ans
+    for card in sorted(card_count.keys()):
+        if (len(seq) == 0 and card > value and card <= Card.ACE and card_count[card] >= num) or \
+              (len(seq) != 0 and seq[-1] + 1 == card and card <= Card.ACE and card_count[card] >= num):
+            seq = seq + [card] * num
+        else:
+            seq = [card] * num
+        if len(seq) == length * num:
+            pattern = -1
+            if num == 1:
+                pattern = length + 2
+            elif num == 2:
+                pattern = length + 12
+            res.append(Move(copy.deepcopy(seq), pattern, seq[0]))
+            seq = seq[num:]
+    return res
 
 def getPlane(cards, length, size):
     ans = []
