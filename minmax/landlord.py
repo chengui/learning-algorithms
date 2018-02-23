@@ -102,7 +102,7 @@ class Move:
         return str(Card.revert(self.cards))
 
     def __cmp__(self, o):
-        return cmp(self.cards, o.cards)
+        return cmp(sorted(self.cards), sorted(o.cards))
 
     def __contains__(self, v):
         return v in self.cards
@@ -121,8 +121,8 @@ class Board:
 
     def __str__(self):
         s = ''
-        s += 'PlayerA(U): %s\n' % Card.revert(self.playerA)
-        s += 'PlayerB(I): %s\n' % Card.revert(self.playerB)
+        s += 'PlayerA(U): %s\n' % Card.revert(sorted(self.playerA, reverse=True))
+        s += 'PlayerB(I): %s\n' % Card.revert(sorted(self.playerB, reverse=True))
         # s += 'Records: %s\n' % ', '.join(map(str, self.records))
         return s
 
@@ -160,7 +160,7 @@ class Board:
         last_move = self.records.pop()
         for i in last_move:
             player.append(i)
-        player = sorted(player)
+        # player = sorted(player)
 
     def getNextMoves(self):
         if self.records:
